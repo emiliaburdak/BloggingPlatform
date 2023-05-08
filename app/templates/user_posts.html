@@ -3,26 +3,8 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1 align="center">ALL POSTS</h1>
 
-<br>
-
-
-<form method="POST" action="{{ url_for('views.add_post') }}">
-    <div class="form-group">
-        <input
-                type="text"
-                class="form-control"
-                id="post" name="post"
-                placeholder="New post, start tapping here...">
-    </div>
-    <br>
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary">SUBMIT</button>
-    </div>
-</form>
-<br>
-<h1 align="center">POSTS</h1>
+<h1 align="center">{{user.username}}'s posts</h1>
 <div id="posts">
     {% for post in posts %}
     <div class="card border-dark">
