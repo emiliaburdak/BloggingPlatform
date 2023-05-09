@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from .models import Post, User
+from .models import Post, User, Comments
 from . import db
 
 # import json
@@ -62,3 +62,18 @@ def user_posts(username):
         return render_template('user_posts.html', user=user, posts=posts)
 
 
+@views.route('/add_comment/<post_id>', methods=['POST'])
+@login_required
+def add_comment(post_id):
+    comment = request.form.get('comment')
+    post = Post.query.filter_by(id=post_id)
+    if len(comment) < 1:
+        flash('Comment is too short!', category='error')
+    else:
+        if post:
+            new_comment = Comments(comment=comment, author=current_user.id, post_id=post_id)
+            db.session.add(new_comment)
+            db.session.commit()
+        else:
+            flash('Post does not exist', category='error')
+    return redirect(url_for('views.home'))
