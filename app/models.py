@@ -11,6 +11,7 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(150))
     posts = db.relationship('Post', backref='user', passive_deletes=True)
     comments = db.relationship('Comments', backref='user', passive_deletes=True)
+    likes = db.relationship('Likes', backref='user', passive_deletes=True)
 
 
 class Post(db.Model):
@@ -19,11 +20,19 @@ class Post(db.Model):
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     comments = db.relationship('Comments', backref='post', passive_deletes=True)
+    likes = db.relationship('Likes', backref='post', passive_deletes=True)
 
 
 class Comments(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.String(1000))
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
+    author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
+
+
+class Likes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)

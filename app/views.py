@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from .models import Post, User, Comments
+from .models import Post, User, Comments, Likes
 from . import db
 
 # import json
@@ -83,9 +83,27 @@ def add_comment(post_id):
 @login_required
 def delete_comment(comment_id, post_id):
     comment = Comments.query.filter_by(id=comment_id, post_id=post_id).first()
-    if comment.author != current_user.id:  #or carrent_user.id != comment.post.author
+    if comment.author != current_user.id:  # or carrent_user.id != comment.post.author
         flash('You dont have permission')
     else:
         db.session.delete(comment)
         db.session.commit()
     return redirect(url_for('views.home'))
+
+
+@views.route('/like_post/<post_id>')
+@login_required
+def like_post(post_id):
+    like = Likes.query.filter_by(post_id=post_id, author=current_user.id).first()
+    post = Post.query.filter_by(id=post_id).first()
+    if not post:
+        flash('This post does not exist')
+    elif like:
+        db.session.delete(like)
+        db.session.commit()
+        return redirect(url_for('views.home'))
+    else:
+        like = Likes(post_id=post_id, author=current_user.id)
+        db.session.add(like)
+        db.session.commit()
+        return redirect(url_for('views.home'))
