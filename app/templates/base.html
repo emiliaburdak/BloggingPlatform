@@ -21,9 +21,15 @@
 
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    {% if user.is_authenticated %}
     <div class="container-fluid">
-
-        <a class="navbar-brand" id="home" href="/">Home</a>
+        <a class="navbar-brand" id="home" href="/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="grey" class="bi bi-house-heart"
+                 viewBox="0 0 16 16">
+                <path d="M8 6.982C9.664 5.309 13.825 8.236 8 12 2.175 8.236 6.336 5.309 8 6.982Z"/>
+                <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.707L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.646a.5.5 0 0 0 .708-.707L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
+            </svg>
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -31,13 +37,14 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" id="logout" href="/logout">Logout</a>
+                    <a class="nav-link active" aria-current="page" id="profile" style="color: black;" href="/profile">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">later</a>
+                    <a class="nav-link active" aria-current="page" id="logout" style="color: black;" href="/logout">Logout</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                    <a class="nav-link dropdown-toggle" style="color: black;" href="#" role="button"
+                       data-bs-toggle="dropdown "
                        aria-expanded="false">
                         Dropdown
                     </a>
@@ -50,20 +57,25 @@
                         <li><a class="dropdown-item" href="#">Something else here</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled">later</a>
 
-                </li>
             </ul>
             <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-secondary" type="submit">Search</button>
+                <input class="form-control me-2" type="search" placeholder="Let's find somthing !" aria-label="Search">
+                <button class="btn btn-white" type="submit">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="Grey"
+                         class="bi bi-search-heart" viewBox="0 0 16 16">
+                        <path d="M6.5 4.482c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.69 0-5.018Z"/>
+                        <path d="M13 6.5a6.471 6.471 0 0 1-1.258 3.844c.04.03.078.062.115.098l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1.007 1.007 0 0 1-.1-.115h.002A6.5 6.5 0 1 1 13 6.5ZM6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Z"/>
+                    </svg>
+
+                </button>
             </form>
 
-
-            <a class="nav-item nav-link" id="login" href="/login">Login</a>
-            <a class="nav-item nav-link" id="signup" href="/signup">Sign Up</a>
-
+            {% else %}
+            <a class="nav-item nav-link" id="login" href="/login" style="color: black;">Login</a>
+            <a class="nav-item nav-link" id="signup" href="/signup" style="color: black;">Sign Up</a>
+            {% endif %}
 
         </div>
     </div>
