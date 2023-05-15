@@ -25,7 +25,7 @@ def add_post():
         if len(post) < 1:
             flash('Post is too short!')
         else:
-            new_post = Post(post=post, author=current_user.id)
+            new_post = Post(post=post, author=current_user.id, edit=False)
             db.session.add(new_post)
             db.session.commit()
             return redirect(url_for('views.home'))
@@ -59,7 +59,7 @@ def user_posts(username):
     else:
         # posts = Post.query.filter_by(author=user.id).all() jeden sposób
         posts = user.posts
-        return render_template('user_posts.html', user=user, posts=posts)
+        return render_template('user_posts.html', user=user, posts=posts, title=f"{user.username}'s posts")
 
 
 @views.route('/add_comment/<post_id>', methods=['POST'])
@@ -107,3 +107,45 @@ def like_post(post_id):
         db.session.add(like)
         db.session.commit()
         return redirect(url_for('views.home'))
+
+@views.route('/edit/<post_id>', methods=['POST'])
+@login_required
+def edit(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    if not post:
+        flash('Post does not exist')
+    elif post.author == current_user.id:
+        post.edit = not post.edit
+        db.session.commit()
+        if post.edit:
+            flash('Post has been edited', category="success")
+    return redirect(url_for('views.home'))
+
+
+@views.route('/edit_post/<post_id>', methods=['POST'])
+@login_required
+def edit_post(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    if not post:
+        return jsonify({'success': False, 'message': 'This post does not exist'})
+    edit_post = request.form['post']
+    post.edit = False
+    post.post = edit_post
+    db.session.commit()
+    return redirect(url_for('views.home'))
+
+
+
+
+@views.route('/search')
+@login_required
+def search():
+    search_item = request.args.get('search')
+    all_posts = Post.query.all()
+    findings = []
+    for post in all_posts:
+        post_text = post.post
+        lower_search_item = str(search_item).lower()
+        if lower_search_item in post_text:
+            findings.append(post)
+    return render_template('user_posts.html', posts=findings, user=current_user, title=f"posts containing word: {search_item} ")

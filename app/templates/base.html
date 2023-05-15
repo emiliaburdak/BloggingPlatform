@@ -59,8 +59,8 @@
                 </li>
 
             </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Let's find somthing !" aria-label="Search">
+            <form method="GET" action="{{ url_for('views.search') }}" class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Let's find somthing !" aria-label="Search" name="search" id="search">
                 <button class="btn btn-white" type="submit">
 
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="Grey"
