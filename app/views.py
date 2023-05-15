@@ -14,7 +14,8 @@ views = Blueprint('views', __name__)
 @login_required
 def home():
     posts = Post.query.all()
-    return render_template('home.html', user=current_user, posts=posts)
+    comments = Comments.query.all()
+    return render_template('home.html', user=current_user, posts=posts, comments=comments)
 
 
 @views.route('/add_post', methods=['POST', 'GET'])
@@ -71,7 +72,7 @@ def add_comment(post_id):
         flash('Comment is too short!', category='error')
     else:
         if post:
-            new_comment = Comments(comment=comment, author=current_user.id, post_id=post_id)
+            new_comment = Comments(comment=comment, author=current_user.id, post_id=post_id, edit_switch=False)
             db.session.add(new_comment)
             db.session.commit()
         else:
@@ -135,7 +136,31 @@ def edit_post(post_id):
     return redirect(url_for('views.home'))
 
 
+@views.route('/edit_switch/<comment_id>', methods=['POST'])
+@login_required
+def edit_switch(comment_id):
+    comment = Comments.query.filter_by(id=comment_id).first()
+    if not comment:
+        flash('Comment does not exist')
+    elif comment.author == current_user.id:
+        comment.edit_switch = not comment.edit_switch
+        db.session.commit()
+        if comment.edit_switch:
+            flash('Comment has been edited', category="success")
+    return redirect(url_for('views.home'))
 
+
+@views.route('/edit_comment/<comment_id>', methods=['POST'])
+@login_required
+def edit_comment(comment_id):
+    comment = Comments.query.filter_by(id=comment_id).first()
+    if not comment:
+        return jsonify({'success': False, 'message': 'This comment does not exist'})
+    edit_comment = request.form['comment']
+    comment.edit_switch = False
+    comment.comment = edit_comment
+    db.session.commit()
+    return redirect(url_for('views.home'))
 
 @views.route('/search')
 @login_required

@@ -128,7 +128,7 @@
                 <div id="commentSection{{post.id}}" class="collapse">
                     <br>
 
-                    {% for comment in post.comments %}
+                    {% for comment in comments %}
                     <div class="form-control" style="position: relative;">
                         {{ user.username }}
                         <br>
@@ -139,14 +139,48 @@
                             <a href="/delete_comment/{{comment.id}}/{{post.id}}" class="dropdown-item">Delete</a>
                         </div>
                         {% endif %}
-
+    </form>
                         <hr>
-                        {{ comment.comment }}
 
+                        {% if current_user.id == comment.author %}
+                        {% if comment.edit_switch %}
 
+                        <form class="ui form" action="/edit_comment/{{comment.id}}" method="POST">
 
+                            <input
+                                    type="text"
+                                    class="form-control comment"
+                                    name="comment"
+                                    value="{{comment.comment}}">
 
+                            <button type="submit" class="btn btn-sm btn-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                     class="bi bi-check-lg" viewBox="0 0 16 16">
+                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                                </svg>
+                            </button>
 
+                        </form>
+
+                        {% else %}
+
+                        <div class="card-text">{{comment.comment}}</div>
+
+                        <form class="ui form" action="/edit_switch/{{comment.id}}" method="POST">
+                            <button type="submit" class="btn btn-sm btn-white"
+                                    style="position: absolute; right: 0; top: 75%; transform: translateY(-50%);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                     class="bi bi-pen"
+                                     viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                </svg>
+                            </button>
+                        </form>
+
+                        {% endif %}
+                        {% else %}
+                        <div class="card-text">{{comment.comment}}</div>
+                        {% endif %}
 
 
                         <br>
@@ -180,7 +214,7 @@
                 </button>
             </div>
         </div>
-    </form>
+
 
     <br>
     {% endfor %}

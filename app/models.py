@@ -28,7 +28,7 @@ class Comments(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.String(1000))
     date = db.Column(db.DateTime(timezone=True), default=func.now())
-    edit_swich = db.Column(db.Boolean)
+    edit_switch = db.Column(db.Boolean)
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
 
