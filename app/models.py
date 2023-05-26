@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', backref='user', passive_deletes=True)
     comments = db.relationship('Comments', backref='user', passive_deletes=True)
     likes = db.relationship('Likes', backref='user', passive_deletes=True)
+    saved = db.relationship('Post', secondary='saved', backref=db.backref('saved', lazy='dynamic'))
 
 
 class Post(db.Model):
@@ -38,3 +39,10 @@ class Likes(db.Model):
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     author = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
+
+
+# tzw association table
+class Saved(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
