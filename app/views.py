@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from .models import Post, User, Comments, Likes
+from .models import Post, User, Comments, Likes, Saved
 from . import db
 
 # import json
@@ -174,3 +174,27 @@ def search():
         if lower_search_item in post_text:
             findings.append(post)
     return render_template('user_posts.html', posts=findings, user=current_user, title=f"posts containing word: {search_item} ")
+
+
+@views.route('/show_saved')
+@login_required
+def show_saved():
+    saved_posts = current_user.saved
+    return render_template('user_posts.html', posts=saved_posts, user=current_user, title=f"Your saved posts")
+
+
+@views.route('/saved/<post_id>')
+@login_required
+def saved(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    user = User.query.filter_by(id=current_user.id).first()
+    if post not in user.saved:
+        user.saved.append(post)
+        db.session.commit()
+    else:
+        user.saved.remove(post)
+        db.session.commit()
+    return redirect(url_for('views.home'))
+
+
+

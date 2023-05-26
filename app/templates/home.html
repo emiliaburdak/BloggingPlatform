@@ -48,6 +48,33 @@
             </div>
             {% endif %}
         </div>
+
+        {% if post in user.saved %}
+        <div class="btn-group" style="position: absolute; bottom: 0; height: 65px; line-height: 65px;">
+            <a href="/saved/{{post.id}}" class="dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red"
+                     class="bi bi-bookmark-heart" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z"/>
+                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                </svg>
+            </a>
+        </div>
+
+        {% else %}
+        <div class="btn-group" style="position: absolute; bottom: 0 ; height: 65px; line-height: 65px;">
+            <a href="/saved/{{post.id}}" class="dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black"
+                     class="bi bi-bookmark-heart" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z"/>
+                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                </svg>
+            </a>
+        </div>
+
+        {% endif %}
+
         <center>
             <div class="card-body">
                 {% if current_user.id == post.author %}
@@ -92,6 +119,7 @@
 
                 <br>
 
+
                 {{ post.likes | length }} {% if user.id in post.likes | map(attribute="author") | list %}
 
                 <div class="btn-group" style="position: absolute; bottom: 0; height: 65px; line-height: 65px;">
@@ -112,7 +140,10 @@
                         </svg>
                     </a>
                 </div>
+
+
                 {% endif %}
+
             </div>
         </center>
     </div>
@@ -140,84 +171,84 @@
                         </div>
                         {% endif %}
     </form>
-                        <hr>
+    <hr>
 
-                        {% if current_user.id == comment.author %}
-                        {% if comment.edit_switch %}
+    {% if current_user.id == comment.author %}
+    {% if comment.edit_switch %}
 
-                        <form class="ui form" action="/edit_comment/{{comment.id}}" method="POST">
+    <form class="ui form" action="/edit_comment/{{comment.id}}" method="POST">
 
-                            <input
-                                    type="text"
-                                    class="form-control comment"
-                                    name="comment"
-                                    value="{{comment.comment}}">
+        <input
+                type="text"
+                class="form-control comment"
+                name="comment"
+                value="{{comment.comment}}">
 
-                            <button type="submit" class="btn btn-sm btn-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-check-lg" viewBox="0 0 16 16">
-                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
-                                </svg>
-                            </button>
+        <button type="submit" class="btn btn-sm btn-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                 class="bi bi-check-lg" viewBox="0 0 16 16">
+                <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+            </svg>
+        </button>
 
-                        </form>
+    </form>
 
-                        {% else %}
+    {% else %}
 
-                        <div class="card-text">{{comment.comment}}</div>
+    <div class="card-text">{{comment.comment}}</div>
 
-                        <form class="ui form" action="/edit_switch/{{comment.id}}" method="POST">
-                            <button type="submit" class="btn btn-sm btn-white"
-                                    style="position: absolute; right: 0; top: 75%; transform: translateY(-50%);">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-pen"
-                                     viewBox="0 0 16 16">
-                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
-                                </svg>
-                            </button>
-                        </form>
+    <form class="ui form" action="/edit_switch/{{comment.id}}" method="POST">
+        <button type="submit" class="btn btn-sm btn-white"
+                style="position: absolute; right: 0; top: 75%; transform: translateY(-50%);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                 class="bi bi-pen"
+                 viewBox="0 0 16 16">
+                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+            </svg>
+        </button>
+    </form>
 
-                        {% endif %}
-                        {% else %}
-                        <div class="card-text">{{comment.comment}}</div>
-                        {% endif %}
-
-
-                        <br>
-                        <br>
-                    </div>
-                    <br>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-
-            <div style="position: relative">
-                <input
-                        type="text"
-                        class="form-control"
-                        id="comment"
-                        name="comment"
-                        placeholder="New comment, start tapping here..."
-                />
-                <button
-                        type="submit"
-                        class="btn btn-white"
-                        style="position: absolute; right: 0; top: 50%; transform: translateY(-50%);">
-                    <svg
-                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black"
-                            class="bi bi-cursor" viewBox="0 0 16 16">
-                        <path
-                                d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103zM2.25 8.184l3.897 1.67a.5.5 0 0 1 .262.263l1.67 3.897L12.743 3.52 2.25 8.184z"
-                        />
-                    </svg>
-                </button>
-            </div>
-        </div>
+    {% endif %}
+    {% else %}
+    <div class="card-text">{{comment.comment}}</div>
+    {% endif %}
 
 
     <br>
-    {% endfor %}
+    <br>
+</div>
+<br>
+{% endfor %}
+</div>
+{% endif %}
+</div>
 
-    {% endblock %}
+<div style="position: relative">
+    <input
+            type="text"
+            class="form-control"
+            id="comment"
+            name="comment"
+            placeholder="New comment, start tapping here..."
+    />
+    <button
+            type="submit"
+            class="btn btn-white"
+            style="position: absolute; right: 0; top: 50%; transform: translateY(-50%);">
+        <svg
+                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black"
+                class="bi bi-cursor" viewBox="0 0 16 16">
+            <path
+                    d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103zM2.25 8.184l3.897 1.67a.5.5 0 0 1 .262.263l1.67 3.897L12.743 3.52 2.25 8.184z"
+            />
+        </svg>
+    </button>
+</div>
+</div>
+
+
+<br>
+{% endfor %}
+
+{% endblock %}
 </div>
