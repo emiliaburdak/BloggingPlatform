@@ -17,3 +17,5 @@ Before you begin, ensure you have met the following requirements:
 - You have installed the latest version of Python 3.
 - Flask: The application is built on the Flask web framework. 
 - Flask-Login: For managing user sessions.
+
+![Demonstration of use](https://drive.google.com/uc?export=view&id=1okPFcRNVM6Oi5Gbpl0QbQ_p_lWMdlsTz)
